@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Control Arduino</title>
+  <style>
+    button { font-size: 20px; }
+  </style>
+</head>
+<body>
+  <button id="vibOn">Turn VIB On</button>
+  <button id="vibOff">Turn VIB Off</button>
+
+  <script>
+    document.getElementById("vibOn").onclick = function() {
+      fetch('/vib/on', { method: 'GET' });
+    };
+    document.getElementById("vibOff").onclick = function() {
+      fetch('/vib/off', { method: 'GET' });
+    };
+  </script>
+</body>
+</html>
