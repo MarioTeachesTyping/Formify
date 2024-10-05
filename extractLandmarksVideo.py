@@ -4,6 +4,7 @@ import csv
 
 def process_video(video_path, output_csv, n, m, x, target_fps=10):
     print(video_path)
+    
     # Initialize mediapipe solutions
     mp_pose = mp.solutions.pose
     mp_hands = mp.solutions.hands
