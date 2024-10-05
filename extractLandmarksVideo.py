@@ -70,4 +70,4 @@ def process_video(video_path, output_csv, n, m, x, target_fps=10):
         cap.release()
 
 # Example usage:
-process_video('videos\\acl_week8_easy.mp4', 'output_landmarks.csv', 'n_value', 'm_value', 'x_value')
+process_video('videos\\arm_stretch.mp4', 'output_landmarks.csv', 'n_value', 'm_value', 'x_value')

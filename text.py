@@ -54,7 +54,7 @@ def extract_landmarks_from_video(video_path, output_dir):
     cv2.destroyAllWindows()
 
 # Path to the input video and output directory for saving landmark frames
-video_path = 'videos\\acl_week8_easy.mp4'  # Replace with your video path
+video_path = 'videos\\arm_stretch.mp4'  # Replace with your video path
 output_dir = 'landmark_frames'  # Replace with your desired output folder
 
 # Call the function to extract landmarks from the video
