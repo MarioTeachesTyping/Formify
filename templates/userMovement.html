@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Movement</title>
+    <link rel="stylesheet" href="userMovement.css">
+</head>
+
+<body>
+
+    <!-- Video Section -->
+    <section id="video-container">
+        <div id="demo-video-section">
+            <video id="exercise-video" controls poster="poster-image.jpg">
+                <source src="path/to/your/video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        
+        <div id="camera-video-section">
+            <video id="camera-feed" autoplay playsinline></video>
+        </div>
+    </section>
+
+    <!-- Continue Button -->
+    <section id="continue-section">
+        <a href="userMovement.html"><button id="continue-button">Continue</button></a>
+    </section>
+
+    <script>
+        // Access the camera feed
+        const cameraFeed = document.getElementById('camera-feed');
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                cameraFeed.srcObject = stream;
+            })
+            .catch((error) => {
+                console.error("Error accessing the camera: ", error);
+            });
+    </script>
+</body>
+
+</html>

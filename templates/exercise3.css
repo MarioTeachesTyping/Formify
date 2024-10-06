@@ -1,0 +1,83 @@
+/* General Styles */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif; /* Change to Roboto font */
+  background: linear-gradient(
+    to top,
+    #4a94ff,
+    #ffffff 50%
+  ); /* Blue to white gradient */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Exercise section styles */
+#exercise-section {
+  text-align: left;
+  padding: 40px;
+}
+
+/* Routine Section Heading Styles */
+h1 {
+  font-size: 5em; /* A lot larger font size */
+  font-weight: bold; /* Make it bold for emphasis */
+  color: #4a94ff; /* Slightly deeper blue */
+  margin-bottom: 0; /* No margin at the bottom */
+}
+
+h2 {
+  font-size: 3rem; /* Slightly larger than before */
+  font-weight: bold;
+  color: black;
+  margin-top: 5px; /* Adjusted to reduce gap between h1 and h2 */
+  margin-bottom: 10px; /* Adjusted to keep some space below h2 */
+}
+
+/* Orange Start button */
+#start-exercise-button {
+  padding: 12px 24px;
+  font-size: 1.3em; /* Adjusted font size */
+  cursor: pointer;
+  background-color: #ff8c00; /* Orange color */
+  color: white;
+  border: none;
+  border-radius: 25px; /* More rounded button */
+  text-decoration: none;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+#start-exercise-button:hover {
+  background-color: #e07b00; /* Darker orange for hover effect */
+}
+
+/* Image styling */
+#exercise-image {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 100%; /* Set to take full width */
+  max-width: 300px; /* Limit the maximum width */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 15px; /* Rounded edges for a softer look */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  #exercise-section {
+    padding: 20px;
+  }
+
+  #exercise-image {
+    width: 100%;
+    height: auto;
+    position: relative;
+    bottom: 0;
+    right: 0;
+    margin-top: 20px;
+  }
+}

@@ -1,12 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Feed</title>
+    <title>Your Stretching Routine</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <h1>Live Video Feed with Landmarks</h1>
-    <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+
+    <!-- Routine Heading and Description -->
+    <section id="routine-section">
+        <h1>FORMIFY</h1>
+        <h2>CHOOSE YOUR TARGET AREA</h2>
+        <p class="placeholder-text">What part of the body do you want to exercise?</p>
+
+        <div class="dropdown-container">
+            <select id="dropdown1" class="dropdown">
+                <option value="">Select Target Area</option>
+                <option value="knees">Knees</option>
+                <option value="elbow">Elbow</option>
+                <option value="wrist">Wrist</option>
+            </select>
+
+            <select id="dropdown2" class="dropdown">
+                <option value="">Select your desired recovery time</option>
+                <option value="2-4 weeks">2-4 weeks</option>
+                <option value="6-8 weeks">6-8 weeks</option>
+                <option value="8-12 weeks">8-12 weeks</option>
+            </select>
+
+            <select id="dropdown3" class="dropdown">
+                <option value="">Select your difficulty level</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="intense">Intense</option>
+            </select>
+        </div>
+
+        <button id="continue-button" onclick="validateSelections()">Continue</button>
+    </section>
+
+    <script>
+        function validateSelections() {
+            const dropdown1 = document.getElementById("dropdown1").value;
+            const dropdown2 = document.getElementById("dropdown2").value;
+            const dropdown3 = document.getElementById("dropdown3").value;
+
+            // Check if all dropdowns have a selected value
+            if (dropdown1 === "" || dropdown2 === "" || dropdown3 === "") {
+                alert("Please select an option from all dropdown menus before continuing.");
+            } else {
+                // Check which target area is selected in the first dropdown
+                switch (dropdown1) {
+                    case "elbow":
+                        window.location.href = "elbowStretch.html"; // Redirect to elbowStretch.html
+                        break;
+                    case "knees":
+                        window.location.href = "kneeStretch.html"; // Redirect to kneeStretch.html
+                        break;
+                    case "wrist":
+                        window.location.href = "wristStretch.html"; // Redirect to wristStretch.html
+                        break;
+                    // No default case here
+                }
+            }
+        }
+    </script>
+
 </body>
+
 </html>

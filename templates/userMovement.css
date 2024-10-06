@@ -1,0 +1,65 @@
+/* General Styles */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif; /* Change to Roboto font */
+  background: linear-gradient(
+    to top,
+    #4a94ff,
+    #ffffff 50%
+  ); /* Blue to white gradient */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Video Container */
+#video-container {
+  display: flex; /* Flexbox to arrange children side by side */
+  justify-content: space-between; /* Space out the video sections */
+  width: 100%; /* Take full width */
+  height: 80vh; /* Take a significant height of the viewport */
+}
+
+/* Demo Video Section */
+#demo-video-section {
+  flex: 1; /* Takes up half of the width */
+  padding: 10px; /* Add some padding */
+}
+
+/* Camera Video Section */
+#camera-video-section {
+  flex: 1; /* Takes up the other half of the width */
+  padding: 10px; /* Add some padding */
+}
+
+/* Video Styling */
+video {
+  width: 100%; /* Make videos take full width of their containers */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px; /* Rounded edges for a softer look */
+  border: 2px solid #ccc; /* Border style */
+}
+
+/* Continue Button Section */
+#continue-section {
+  margin-top: 20px; /* Space above the button */
+}
+
+#continue-button {
+  padding: 12px 24px;
+  font-size: 1.3em;
+  cursor: pointer;
+  background-color: #4caf50; /* Green color */
+  color: white;
+  border: none;
+  border-radius: 50px; /* Rounded button */
+  text-decoration: none;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+#continue-button:hover {
+  background-color: #45a049; /* Darker green for hover effect */
+}
