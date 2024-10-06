@@ -24,19 +24,19 @@
 
 <script>
     // Replace with your ESP32 IP address
-    const baseURL = 'http://<ESP32_IP>/';
+    const baseURL = 'http://192.168.137.169/';
 
-    function turnOnLED() {
-        fetch(baseURL + 'led/on')
+    function turnOnVIB() {
+        fetch(baseURL + 'vib/on')
             .then(response => response.text())
-            .then(data => console.log('LED ON:', data))
+            .then(data => console.log('VIB ON:', data))
             .catch(error => console.error('Error:', error));
     }
 
-    function turnOffLED() {
-        fetch(baseURL + 'led/off')
+    function turnOffVIB() {
+        fetch(baseURL + 'vib/off')
             .then(response => response.text())
-            .then(data => console.log('LED OFF:', data))
+            .then(data => console.log('VIB OFF:', data))
             .catch(error => console.error('Error:', error));
     }
 </script>
