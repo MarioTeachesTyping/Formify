@@ -5,7 +5,7 @@ import pandas as pd
 import requests
 
 # Replace this with the actual IP address of your ESP32
-ESP32_IP = 'http://<ESP32_IP>'  # Example: 'http://192.168.1.100'
+ESP32_IP = 'http://192.168.137.223'  # Example: 'http://192.168.1.100'
 
 # Constants
 CANVAS_SIZE = (640, 480)
@@ -19,7 +19,7 @@ TARGET_FPS = 28  # Frame rate
 
 def turn_on_vibration(int_value):
     """Sends a GET request to turn the LED on."""
-    url = f"{ESP32_IP}/led/on?value={int_value}"
+    url = f"{ESP32_IP}/vib/on?value={int_value}"
     
     try:
         response = requests.get(url)
@@ -33,7 +33,7 @@ def turn_on_vibration(int_value):
 
 def turn_off_vibration(int_value):
     """Sends a GET request to turn the LED off."""
-    url = f"{ESP32_IP}/led/off?value={int_value}"
+    url = f"{ESP32_IP}/vib/off?value={int_value}"
     
     try:
         response = requests.get(url)
@@ -45,15 +45,6 @@ def turn_off_vibration(int_value):
     except Exception as e:
         print(f"Error turning off LED: {e}")
 
-
-def vibrate(part, boolean, bdy_type):
-    # type represents hand or pose
-    print(f"vibrating: {boolean} of {part} at {bdy_type}")
-    if(boolean):
-        turn_on_vibration()
-    else:
-        turn_off_vibration()
-
 def find_val(matching_row, column_name):
     final_value = 0
     try:
@@ -61,6 +52,31 @@ def find_val(matching_row, column_name):
     except:
         print("finding val err")
     return final_value
+
+def vibrate(part, boolean, bdy_type):
+    # type represents hand or pose
+    print(f"vibrating: {boolean} of {part} at {bdy_type}")
+
+    """
+    arm..: 13, 14
+    knee.: 25, 26
+    wrist: 15, 16
+
+    """
+
+    if(part == 13):
+
+        if(boolean):
+            turn_on_vibration(1)
+        else:
+            turn_off_vibration(1)
+    if(part == 25):
+    
+        if(boolean):
+            turn_on_vibration(0)
+        else:
+            turn_off_vibration(0)
+
 
 
 def draw_landmarks(output_csv, frame, pose_landmarks, hand_landmarks, m,n, intensity, countdown_time,  frame_count):
