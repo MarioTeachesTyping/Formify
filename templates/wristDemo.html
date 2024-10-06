@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrist Video Demonstration</title>
+    <!-- <link rel="stylesheet" href="exercise3Demo.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wristDemo.css') }}">
+
+</head>
+<script>
+    // Function to call the Python function via AJAX (fetch)
+    function process() {
+
+        // Send a POST request to Flask backend
+        fetch('/process', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ n: "wrist", m: "8_12_weeks", x:"easy" })  // Data sent to Flask
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response (which is the result of the Python function)
+            document.getElementById("result").innerText = data.result;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+<body>
+
+    <!-- Video Section -->
+    <section id="video-section">
+        <video id="exercise-video" controls>
+            <source src="{{ url_for('static', filename='videos/wrist-8_12_weeks-easy.mp4') }}" type="video/mp4">
+        </video>
+    </section>
+
+    <!-- Continue Button -->
+    <section id="continue-section">
+        <h1>Once you click this button a camera module will open and show you the data</h1>
+        <button onclick="process()" id="continue-button">Continue</button>
+    </section>
+
+</body>
+
+</html>

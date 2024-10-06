@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Stretching Routine</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
 </head>
 
 <body>
@@ -55,13 +56,13 @@
                 // Check which target area is selected in the first dropdown
                 switch (dropdown1) {
                     case "elbow":
-                        window.location.href = "elbowStretch.html"; // Redirect to elbowStretch.html
+                        window.location.href = "elbowStretch"; // Redirect to elbowStretch
                         break;
                     case "knees":
-                        window.location.href = "kneeStretch.html"; // Redirect to kneeStretch.html
+                        window.location.href = "kneeStretch"; // Redirect to kneeStretch
                         break;
                     case "wrist":
-                        window.location.href = "wristStretch.html"; // Redirect to wristStretch.html
+                        window.location.href = "wristStretch"; // Redirect to wristStretch.html
                         break;
                     // No default case here
                 }

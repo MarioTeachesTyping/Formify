@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knee Video Demonstration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/kneeDemo.css') }}">
+
+</head>
+<script>
+    // Function to call the Python function via AJAX (fetch)
+    function process() {
+
+        // Send a POST request to Flask backend
+        fetch('/process', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ n: "knee", m: "3_6_weeks", x:"medium" })  // Data sent to Flask
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response (which is the result of the Python function)
+            document.getElementById("result").innerText = data.result;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+<body>
+
+    <!-- Video Section -->
+    <section id="video-section">
+        <video id="exercise-video" controls >
+            <source src="{{ url_for('static', filename='videos/knee-3_6_weeks-medium.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </section>
+
+    <!-- Continue Button -->
+      <!-- Continue Button -->
+      <section id="continue-section">
+        <h1>Once you click this button a camera module will open and show you the data</h1>
+        <button onclick="process()" id="continue-button">Continue</button>
+    </section>
+
+</body>
+
+</html>

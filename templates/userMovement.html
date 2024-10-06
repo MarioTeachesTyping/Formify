@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Movement</title>
     <link rel="stylesheet" href="userMovement.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/userMovement.css') }}">
+
 </head>
 
 <body>
@@ -26,20 +28,10 @@
 
     <!-- Continue Button -->
     <section id="continue-section">
-        <a href="userMovement.html"><button id="continue-button">Continue</button></a>
+        <a href="userMovement"><button id="continue-button">Continue</button></a>
     </section>
 
-    <script>
-        // Access the camera feed
-        const cameraFeed = document.getElementById('camera-feed');
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                cameraFeed.srcObject = stream;
-            })
-            .catch((error) => {
-                console.error("Error accessing the camera: ", error);
-            });
-    </script>
+   
 </body>
 
 </html>

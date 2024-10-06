@@ -14,46 +14,46 @@ POSE_COLOR = (0, 255, 0)  # Green for pose
 HAND_COLOR = (255, 0, 0)  # Blue for hands
 COUNTDOWN_START = 0  # Countdown starting value
 TARGET_FPS = 28  # Frame rate
-
+B_VALUE = 0.15
 
 
 def turn_on_vibration(int_value):
-    """Sends a GET request to turn the LED on."""
+    """Sends a GET request to turn the Vibration Motor on."""
     url = f"{ESP32_IP}/vib/on?value={int_value}"
     
     try:
         response = requests.get(url)
         
         if response.status_code == 200:
-            print(f"LED ON: {response.text}")
+            print(f"Vibration Motor ON: {response.text}")
         else:
-            print(f"Failed to turn on LED. Status code: {response.status_code}")
+            print(f"Failed to turn on Vibration Motor. Status code: {response.status_code}")
     except Exception as e:
-        print(f"Error turning on LED: {e}")
+        print(f"Error turning on Vibration Motor: {e}")
 
 def turn_off_vibration(int_value):
-    """Sends a GET request to turn the LED off."""
+    """Sends a GET request to turn the Vibration Motor off."""
     url = f"{ESP32_IP}/vib/off?value={int_value}"
     
     try:
         response = requests.get(url)
         
         if response.status_code == 200:
-            print(f"LED OFF: {response.text}")
+            print(f"Vibration Motor OFF: {response.text}")
         else:
-            print(f"Failed to turn off LED. Status code: {response.status_code}")
+            print(f"Failed to turn off Vibration Motor. Status code: {response.status_code}")
     except Exception as e:
-        print(f"Error turning off LED: {e}")
+        print(f"Error turning off Vibration Motor: {e}")
 
 def find_val(matching_row, column_name):
     final_value = 0
     try:
         final_value = matching_row[column_name].values[0]
     except:
-        print("finding val err")
+        print("")
     return final_value
 
-def vibrate(part, boolean, bdy_type):
+def vibrate(part, boolean, bdy_type, request):
     # type represents hand or pose
     print(f"vibrating: {boolean} of {part} at {bdy_type}")
 
@@ -64,20 +64,26 @@ def vibrate(part, boolean, bdy_type):
 
     """
 
-    if(part == 13):
+    my_dict = {
+        "arm_stretch": [11, 12, 13,14],
+        "knee": [25,26],
+        "wrist": [15,16, 17, 19]
+    }
+
+    if(part in my_dict[request] and request == "knee"):
 
         if(boolean):
             turn_on_vibration(1)
-        else:
-            turn_off_vibration(1)
-    if(part == 25):
+       
+    if(part == my_dict[request][1] and request != "knee"):
     
         if(boolean):
             turn_on_vibration(0)
-        else:
-            turn_off_vibration(0)
 
-
+    # else:
+    #     turn_off_vibration(1)
+    #     turn_off_vibration(0)
+        
 
 def draw_landmarks(output_csv, frame, pose_landmarks, hand_landmarks, m,n, intensity, countdown_time,  frame_count):
     """Draws pose and hand landmarks on the frame.""" # [column_name].values[0]
@@ -91,11 +97,12 @@ def draw_landmarks(output_csv, frame, pose_landmarks, hand_landmarks, m,n, inten
             # Retrieve pose landmark values from CSV
             pose_landmark_value_x = find_val( matching_row_data, f'pose_landmark_{i}_x')
             pose_landmark_value_y = find_val( matching_row_data, f'pose_landmark_{i}_y' )
-
-            if(pose_landmark_value_x - x > 0.5 or pose_landmark_value_y > 0.5 or pose_landmark_value_x - x < -0.5 or pose_landmark_value_y < -0.5):
-                vibrate(i, True, "pose")
-            else:
-                vibrate(i, False, "pose")
+            
+            if(pose_landmark_value_x and pose_landmark_value_y):
+                if(pose_landmark_value_x - x > B_VALUE or pose_landmark_value_y > B_VALUE or pose_landmark_value_x - x < -B_VALUE or pose_landmark_value_y < -B_VALUE):
+                    vibrate(i, True, "pose", n)
+                else:
+                    vibrate(i, False, "pose", n)
 
             cv2.circle(frame, (x, y), LANDMARK_RADIUS, POSE_COLOR, -1)
 
@@ -109,22 +116,44 @@ def draw_landmarks(output_csv, frame, pose_landmarks, hand_landmarks, m,n, inten
                 # Retrieve hand landmark values from CSV
                 hand_landmark_value_x = find_val( matching_row_data, f'hand_{hand_index}_landmark_{j}_x')
                 hand_landmark_value_y = find_val( matching_row_data, f'hand_{hand_index}_landmark_{j}_y')
-
-                if(hand_landmark_value_x - x > 0.5 or hand_landmark_value_y > 0.5 or hand_landmark_value_x - x < -0.5 or hand_landmark_value_y < -0.5):
-                    vibrate(j, True, "hand")
-                else:
-                    vibrate(j, False, "hand")
+                if(hand_landmark_value_x and hand_landmark_value_y):
+                    if(hand_landmark_value_x - x > B_VALUE or hand_landmark_value_y > B_VALUE or hand_landmark_value_x - x < -B_VALUE or hand_landmark_value_y < -B_VALUE):
+                        vibrate(j, True, "hand", n)
+                    else:
+                        vibrate(j, False, "hand", n)
 
                 cv2.circle(frame, (x, y), LANDMARK_RADIUS, HAND_COLOR, -1)
-   
+    # Define connections between pose landmarks (you can customize this)
+    connections = [
+        (11, 12), (12, 14), (14, 16),  # Left Arm
+        (11, 13), (13, 15), (15, 21),  # Left Arm to Body
+        (15, 17), (17, 19), (16, 18),  # Left Leg
+        (18, 20), (16, 20), (16, 22),  # Body to Head
+        (24, 23), (23, 11), (12, 24)  # Example of connecting body parts
+        # Add more connections as needed
+    ]
+    
+    # Draw connections between landmarks
+    for start_idx, end_idx in connections:
+        if start_idx < len(pose_landmarks) and end_idx < len(pose_landmarks):
+            if pose_landmarks[start_idx] and pose_landmarks[end_idx]:
+                start_x = int(pose_landmarks[start_idx].x * frame.shape[1])
+                start_y = int(pose_landmarks[start_idx].y * frame.shape[0])
+                end_x = int(pose_landmarks[end_idx].x * frame.shape[1])
+                end_y = int(pose_landmarks[end_idx].y * frame.shape[0])
+
+                # Draw a line between the two landmarks
+                cv2.line(frame, (start_x, start_y), (end_x, end_y), POSE_COLOR, 2)
+        else:
+            print(f"Invalid indices: {start_idx}, {end_idx} for pose_landmarks with length {len(pose_landmarks)}")
 
 # Constants
-LANDMARK_RADIUS = 5  # Radius for drawing landmarks
 EXPECTED_POSE_COLOR = (255, 255, 0)  # Color for pose landmarks (Green)
 EXPECTED_HAND_COLOR = (255, 255, 0)  # Color for hand landmarks (Red)
 
 def draw_expected_landmarks(frame, pose_landmarks, hand_landmarks):
     """Draws pose and hand landmarks on the frame."""
+    
     # Draw pose landmarks
     if pose_landmarks:
         for landmark in pose_landmarks:
@@ -141,6 +170,31 @@ def draw_expected_landmarks(frame, pose_landmarks, hand_landmarks):
                     x = int(landmark[0] * frame.shape[1])  # x coordinate
                     y = int(landmark[1] * frame.shape[0])  # y coordinate
                     cv2.circle(frame, (x, y), LANDMARK_RADIUS, EXPECTED_HAND_COLOR, -1)
+
+    # Define connections between pose landmarks (you can customize this)
+    connections = [
+        (11, 12), (12, 14), (14, 16),  # Left Arm
+        (11, 13), (13, 15), (15, 21),  # Left Arm to Body
+        (15, 17), (17, 19), (16, 18),  # Left Leg
+        (18, 20), (16, 20), (16, 22),  # Body to Head
+        (24, 23), (23, 11), (12, 24)   # Example of connecting body parts
+        # Add more connections as needed
+    ]
+    
+    # Draw connections between landmarks
+    for start_idx, end_idx in connections:
+        if start_idx < len(pose_landmarks) and end_idx < len(pose_landmarks):
+            if pose_landmarks[start_idx] and pose_landmarks[end_idx]:
+                start_x = int(pose_landmarks[start_idx][0] * frame.shape[1])  # Adjust to access x
+                start_y = int(pose_landmarks[start_idx][1] * frame.shape[0])  # Adjust to access y
+                end_x = int(pose_landmarks[end_idx][0] * frame.shape[1])  # Adjust to access x
+                end_y = int(pose_landmarks[end_idx][1] * frame.shape[0])  # Adjust to access y
+
+                # Draw a line between the two landmarks
+                cv2.line(frame, (start_x, start_y), (end_x, end_y), EXPECTED_POSE_COLOR, 2)
+        else:
+            print(f"Invalid indices: {start_idx}, {end_idx} for pose_landmarks with length {len(pose_landmarks)}")
+
 def generate_time_frame(number_1, number_2):
     """
     Generates a string in the format "X.Y_Z", where:
@@ -149,7 +203,7 @@ def generate_time_frame(number_1, number_2):
     """
     
     # Format the string
-    result = f"{number_1}.0_{number_2}"
+    result = f"{number_1}_{number_2}"
     return result
 
 def find_hand_landmark(csv_file, m, n, x, timestamp, frame_position):
@@ -305,4 +359,4 @@ def process_camera(m,n,x,target_fps=TARGET_FPS):
 
 
 # Main Usage
-process_camera("2_3_weeks","leon","easy")
+process_camera("8_12_weeks","arm_stretch","easy")

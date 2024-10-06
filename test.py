@@ -90,7 +90,7 @@ def process_video(video_path, output_csv, n, m, x, target_fps=TARGET_FPS):
             frame_position = (frame_count // frame_interval) % target_fps  # Ensure integer
 
             # Prepare row data with n, m, x, and timestamp/frame info
-            row_data = [f"{round(time_seconds, 1)}_{round(frame_position,1)}",fps, n, m, x]  # Include timestamp and n, m, x values
+            row_data = [f"{int(time_seconds)}_{int(frame_position)}",fps, n, m, x]  # Include timestamp and n, m, x values
 
             # Extract pose landmarks and append values
             pose_results = pose.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))

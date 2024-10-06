@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Stretching Routine</title>
-    <link rel="stylesheet" href="wristStretch.css">
+    <!-- <link rel="stylesheet" href="wristStretch.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wristStretch.css') }}">
+
 </head>
 
 <body>
@@ -16,7 +18,7 @@
         <h2>WRIST STRETCH</h2>
         <p class="placeholder-text">Placeholder text goes here</p>
 
-        <a href="exercise3.html"><button id="start-button">Get Started</button></a> <!-- Button placed here -->
+        <a href="wristDemo"><button id="start-button">Get Started</button></a> <!-- Button placed here -->
 
         <div class="exercise-container">
             <img src="images/ajPose.webp" alt="Exercise Image" class="small-image">
