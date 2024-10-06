@@ -14,7 +14,7 @@ POSE_COLOR = (0, 255, 0)  # Green for pose
 HAND_COLOR = (255, 0, 0)  # Blue for hands
 COUNTDOWN_START = 0  # Countdown starting value
 TARGET_FPS = 28  # Frame rate
-B_VALUE = 0.15
+B_VALUE = 2.5
 
 
 def turn_on_vibration(int_value):
@@ -359,4 +359,4 @@ def process_camera(m,n,x,target_fps=TARGET_FPS):
 
 
 # Main Usage
-process_camera("8_12_weeks","arm_stretch","easy")
+# process_camera("8_12_weeks","arm_stretch","easy")
