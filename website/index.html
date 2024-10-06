@@ -19,24 +19,30 @@
 <body>
 
 <h1>ESP32 Vibration Control</h1>
-<button onclick="turnOnVIB()">Turn VIB ON</button>
-<button onclick="turnOffVIB()">Turn VIB OFF</button>
+<button onclick="turnOnVIB(0)">Turn VIB1 ON</button>
+<button onclick="turnOnVIB(1)">Turn VIB2 ON</button>
+<button onclick="turnOffVIB(0)">Turn VIB1 OFF</button>
+<button onclick="turnOffVIB(1)">Turn VIB2 OFF</button>
 
 <script>
     // Replace with your ESP32 IP address
     const baseURL = 'http://192.168.137.169/';
 
-    function turnOnVIB() {
-        fetch(baseURL + 'vib/on')
+    function turnOnVIB(pin) {
+        fetch(baseURL + 'vib/on?value=' + pin)  // Send pin value to turn on
             .then(response => response.text())
-            .then(data => console.log('VIB ON:', data))
+            .then(data => {
+                console.log('VIB ' + pin + ' ON:', data);
+            })
             .catch(error => console.error('Error:', error));
     }
 
-    function turnOffVIB() {
-        fetch(baseURL + 'vib/off')
+    function turnOffVIB(pin) {
+        fetch(baseURL + 'vib/off?value=' + pin)  // Send pin value to turn on
             .then(response => response.text())
-            .then(data => console.log('VIB OFF:', data))
+            .then(data => {
+                console.log('VIB ' + pin + ' OFF:', data);
+            })
             .catch(error => console.error('Error:', error));
     }
 </script>
