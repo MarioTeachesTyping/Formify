@@ -1,135 +1,84 @@
 import cv2
 import mediapipe as mp
 import pandas as pd
-import os
-import time
+import csv
 
-# Initialize mediapipe solutions
-mp_pose = mp.solutions.pose
-mp_hands = mp.solutions.hands
-mp_drawing = mp.solutions.drawing_utils
+# Function to load shoulder coordinates from demo CSV
+def load_shoulder_coordinates(demo_csv):
+    demo_data = pd.read_csv(demo_csv)
+    right_shoulder_x = demo_data[demo_data['time_frame_pose_x'].str.contains('right_shoulder_x')]['time_frame_pose_x'].iloc[0].split('_')[-1]
+    right_shoulder_y = demo_data[demo_data['time_frame_pose_x'].str.contains('right_shoulder_y')]['time_frame_pose_x'].iloc[0].split('_')[-1]
+    return float(right_shoulder_x), float(right_shoulder_y)
 
-# Initialize the video capture
-cap = cv2.VideoCapture(0)
+# Process camera input and display landmarks and demo shoulder position
+def process_camera_with_demo(output_csv, demo_csv, n, m, x):
+    # Load demo shoulder coordinates
+    demo_x, demo_y = load_shoulder_coordinates(demo_csv)
 
-# Initialize pose and hands models
-pose = mp_pose.Pose()
-hands = mp_hands.Hands()
-
-# Prepare the CSV file
-csv_file_path = 'landmarks_data.csv'
-if os.path.exists(csv_file_path):
-    os.remove(csv_file_path)  # Remove the file if it already exists
-
-# Initialize DataFrame for storing landmark data
-columns = ['n', 'm', 'x', 'time_frame_pose_x']
-landmark_data = pd.DataFrame(columns=columns)
-
-# Dummy values for n, m, x
-n_value = 'n_value'
-m_value = 'm_value'
-x_value = 'x_value'
-
-# Start the frame capture loop
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        break
+    # Initialize mediapipe solutions
+    mp_pose = mp.solutions.pose
+    mp_hands = mp.solutions.hands
     
-    # Flip the frame for a selfie-view display
-    frame = cv2.flip(frame, 1)
-    
-    # Convert the image to RGB
-    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    
-    # Process the frame for pose landmarks
-    pose_results = pose.process(rgb_frame)
-    
-    # Process the frame for hand landmarks
-    hand_results = hands.process(rgb_frame)
+    # Initialize video capture
+    cap = cv2.VideoCapture(0)  # Use the first camera
 
-    # Prepare the current timestamp
-    timestamp = time.time()
-    
-    # Create a temporary DataFrame for this frame's landmarks
-    frame_landmarks = pd.DataFrame(columns=columns)
+    # Open CSV file to write data
+    with open(output_csv, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        
+        # Write the CSV header
+        header = ['n', 'm', 'x', 'time_frame_pose_x']
+        writer.writerow(header)
 
-    # Draw pose landmarks
-    if pose_results.pose_landmarks:
-        mp_drawing.draw_landmarks(frame, pose_results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+            
+            # Convert the image to RGB
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            
 
-        # Extract pose landmarks
-        for idx, landmark in enumerate(pose_results.pose_landmarks.landmark):
-            # Create the time_frame_pose_x string
-            time_frame_pose_x = f"{timestamp}_{idx}_pose_x_{landmark.x}"
-            frame_landmarks = pd.concat([frame_landmarks, pd.DataFrame({
-                'n': [n_value],
-                'm': [m_value],
-                'x': [x_value],
-                'time_frame_pose_x': [time_frame_pose_x]
-            })], ignore_index=True)
+            with mp_hands.Hands(static_image_mode= False ) as hands, mp_pose.Pose(static_image_mode=False) as pose:
+                pose_results = pose.process(rgb_frame)
+                hand_results = hands.process(rgb_frame)
+                # Draw landmarks and demo shoulder position
+                if pose_results.pose_landmarks:
+                    for landmark in pose_results.pose_landmarks.landmark:
+                        # Convert landmark coordinates to pixel values
+                        h, w, _ = frame.shape
+                        x_px = int(landmark.x * w)
+                        y_px = int(landmark.y * h)
+                        
+                        # Draw the live landmarks
+                        cv2.circle(frame, (x_px, y_px), 5, (0, 255, 0), -1)  # Green for live landmarks
+               # Draw hand landmarks
+                if hand_results.multi_hand_landmarks:
+                    for hand_landmarks in hand_results.multi_hand_landmarks:
+                        for landmark in hand_landmarks.landmark:
+                            # Convert landmark coordinates to pixel values
+                            h, w, _ = frame.shape
+                            x_px = int(landmark.x * w)
+                            y_px = int(landmark.y * h)
 
-            # Append y and z coordinates
-            time_frame_pose_y = f"{timestamp}_{idx}_pose_y_{landmark.y}"
-            frame_landmarks = pd.concat([frame_landmarks, pd.DataFrame({
-                'n': [n_value],
-                'm': [m_value],
-                'x': [x_value],
-                'time_frame_pose_x': [time_frame_pose_y]
-            })], ignore_index=True)
+                            # Draw the live landmarks
+                            cv2.circle(frame, (x_px, y_px), 5, (0, 255, 0), -1)  # Green for hand landmarks
 
-            time_frame_pose_z = f"{timestamp}_{idx}_pose_z_{landmark.z}"
-            frame_landmarks = pd.concat([frame_landmarks, pd.DataFrame({
-                'n': [n_value],
-                'm': [m_value],
-                'x': [x_value],
-                'time_frame_pose_x': [time_frame_pose_z]
-            })], ignore_index=True)
+                # for
 
-    # Draw hand landmarks
-    if hand_results.multi_hand_landmarks:
-        for hand_landmarks in hand_results.multi_hand_landmarks:
-            mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+            # TODO: render the image of the shoulder
+            
+            # Show the image
+            cv2.imshow('Camera Feed', frame)
 
-            # Extract hand landmarks
-            for hand_idx, landmark in enumerate(hand_landmarks.landmark):
-                time_frame_hand_x = f"{timestamp}_{hand_idx}_hand_x_{landmark.x}"
-                frame_landmarks = pd.concat([frame_landmarks, pd.DataFrame({
-                    'n': [n_value],
-                    'm': [m_value],
-                    'x': [x_value],
-                    'time_frame_pose_x': [time_frame_hand_x]
-                })], ignore_index=True)
+            # Write data to CSV (optional, depending on your needs)
+            # ... (add any additional CSV logging here)
 
-                time_frame_hand_y = f"{timestamp}_{hand_idx}_hand_y_{landmark.y}"
-                frame_landmarks = pd.concat([frame_landmarks, pd.DataFrame({
-                    'n': [n_value],
-                    'm': [m_value],
-                    'x': [x_value],
-                    'time_frame_pose_x': [time_frame_hand_y]
-                })], ignore_index=True)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
-                time_frame_hand_z = f"{timestamp}_{hand_idx}_hand_z_{landmark.z}"
-                frame_landmarks = pd.concat([frame_landmarks, pd.DataFrame({
-                    'n': [n_value],
-                    'm': [m_value],
-                    'x': [x_value],
-                    'time_frame_pose_x': [time_frame_hand_z]
-                })], ignore_index=True)
+    cap.release()
+    cv2.destroyAllWindows()
 
-    # Append the current frame's landmarks to the main DataFrame
-    landmark_data = pd.concat([landmark_data, frame_landmarks], ignore_index=True)
-
-    # Save to CSV file periodically
-    landmark_data.to_csv(csv_file_path, index=False)
-
-    # Display the frame
-    cv2.imshow('Pose and Hand Landmarks', frame)
-
-    # Break the loop on 'q' key press
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-# Release the video capture and close all windows
-cap.release()
-cv2.destroyAllWindows()
+# Example usage
+process_camera_with_demo('output_landmarks_camera.csv', 'output_landmarks.csv', 'n_value', 'm_value', 'x_value')
