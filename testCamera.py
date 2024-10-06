@@ -17,9 +17,9 @@ TARGET_FPS = 28  # Frame rate
 
 
 
-def turn_on_vibration():
+def turn_on_vibration(int_value):
     """Sends a GET request to turn the LED on."""
-    url = f"{ESP32_IP}/led/on"
+    url = f"{ESP32_IP}/led/on?value={int_value}"
     
     try:
         response = requests.get(url)
@@ -31,9 +31,9 @@ def turn_on_vibration():
     except Exception as e:
         print(f"Error turning on LED: {e}")
 
-def turn_off_vibration():
+def turn_off_vibration(int_value):
     """Sends a GET request to turn the LED off."""
-    url = f"{ESP32_IP}/led/off"
+    url = f"{ESP32_IP}/led/off?value={int_value}"
     
     try:
         response = requests.get(url)
