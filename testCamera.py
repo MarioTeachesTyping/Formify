@@ -70,15 +70,15 @@ def vibrate(part, boolean, bdy_type, request):
         "wrist": [15,16, 17, 19]
     }
 
-    if(part in my_dict[request] and request == "knee"):
+    # if(part in my_dict[request] and request == "knee"):
 
-        if(boolean):
-            turn_on_vibration(1)
+    #     if(boolean):
+    #         turn_on_vibration(1)
        
-    if(part == my_dict[request][1] and request != "knee"):
+    # if(part == my_dict[request][1] and request != "knee"):
     
-        if(boolean):
-            turn_on_vibration(0)
+    #     if(boolean):
+    #         turn_on_vibration(0)
 
     # else:
     #     turn_off_vibration(1)
@@ -177,7 +177,11 @@ def draw_expected_landmarks(frame, pose_landmarks, hand_landmarks):
         (11, 13), (13, 15), (15, 21),  # Left Arm to Body
         (15, 17), (17, 19), (16, 18),  # Left Leg
         (18, 20), (16, 20), (16, 22),  # Body to Head
-        (24, 23), (23, 11), (12, 24)   # Example of connecting body parts
+        (24, 23), (23, 11), (12, 24),
+        (23, 25), (25, 27), (27, 29),
+        (29, 31), (24, 26), (26, 28),
+        (28, 30), (30, 32), (28, 32),
+        (27, 31)  # Example of connecting body parts
         # Add more connections as needed
     ]
     
