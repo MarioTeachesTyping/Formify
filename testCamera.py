@@ -2,6 +2,10 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import pandas as pd
+import requests
+
+# Replace this with the actual IP address of your ESP32
+ESP32_IP = 'http://<ESP32_IP>'  # Example: 'http://192.168.1.100'
 
 # Constants
 CANVAS_SIZE = (640, 480)
@@ -13,13 +17,51 @@ TARGET_FPS = 28  # Frame rate
 
 
 
+def turn_on_vibration():
+    """Sends a GET request to turn the LED on."""
+    url = f"{ESP32_IP}/led/on"
+    
+    try:
+        response = requests.get(url)
+        
+        if response.status_code == 200:
+            print(f"LED ON: {response.text}")
+        else:
+            print(f"Failed to turn on LED. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"Error turning on LED: {e}")
 
-def find_val(matching_row, column_name):
-    return matching_row[column_name].values[0]
+def turn_off_vibration():
+    """Sends a GET request to turn the LED off."""
+    url = f"{ESP32_IP}/led/off"
+    
+    try:
+        response = requests.get(url)
+        
+        if response.status_code == 200:
+            print(f"LED OFF: {response.text}")
+        else:
+            print(f"Failed to turn off LED. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"Error turning off LED: {e}")
+
 
 def vibrate(part, boolean, bdy_type):
     # type represents hand or pose
     print(f"vibrating: {boolean} of {part} at {bdy_type}")
+    if(boolean):
+        turn_on_vibration()
+    else:
+        turn_off_vibration()
+
+def find_val(matching_row, column_name):
+    final_value = 0
+    try:
+        final_value = matching_row[column_name].values[0]
+    except:
+        print("finding val err")
+    return final_value
+
 
 def draw_landmarks(output_csv, frame, pose_landmarks, hand_landmarks, m,n, intensity, countdown_time,  frame_count):
     """Draws pose and hand landmarks on the frame.""" # [column_name].values[0]
