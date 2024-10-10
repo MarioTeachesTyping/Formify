@@ -1,5 +1,5 @@
 
-##### Notes
+# Notes
 start a virtual environment: run this in the terminal .\venv\Scripts\activate
 then start the server by running flask 
 
