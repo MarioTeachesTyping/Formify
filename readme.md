@@ -22,7 +22,7 @@ Frontend: The frontend serves as our user interface, facilitating seamless conne
 ## 📊 Challenges we Ran Into
 Wireless connectivity took multiple iterations as bluetooth libraries were not supported, then several devices could not produce wifi hotspots with the right specifications for the esp32. Connecting wires robustly was difficult as pieces sliped, broke or lost contact many times in practice. We had to try multiple options of both things. On the software side, implementing and properly adding the specific variables required for the datasets was difficult as it required a deeper knowledge of understanding data structures and the process of working with the AI driven libraries we might not be fully familiar with. Another difficulty was comparing the datasets between the demonstration video, and the live stream capturing the patient on camera. It led to many moments of trial and error as one dataset wouldn't match with the other in some way shape or form.
 
-## 🥇 Accomplishments that we're Proud of
+## 🥇 Accomplishments that We're Proud of
 75% of this team are first time hackers, one of those three is not a CECS major. The final person has only attended one hackathon. Because of this, we are extremely proud to have completed a project that feels close to and end-to-end product. This team began as two duos: one pair looking to do real-time computer vision, and one looking to create a haptic feedback system. Instead of splitting off because we were going in different directions, we decided to put our heads together to attack a problem from multiple angles. We are so proud of how we were able to communicate, split responsibilities between members, and get our parts done. Having a glove as opposed to wristband, having multiple separate vibration points instead of just on/off, and having more than one exercise were all originally moonshot ideas that we were able to implement.
 
 ## 🗣️ What we Learned
@@ -31,7 +31,7 @@ How to connect to hardware wirelessly, and how to control it via web server. How
 ## 💨 What's Next for Formify
 Most importantly, more interviews with PT patients. We believe that communities design for their own needs best. The next iteration of our current system would work towards fully implementing the body diagram with precision motors, including more exercise videos (or linking to a physical therapy stock library as those softwares exist), and allowing more intensity levels for better control over margin of error.
 
-## Built With
+## 🔨 Built With
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)
 ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
@@ -41,8 +41,10 @@ Most importantly, more interviews with PT patients. We believe that communities 
 ![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
 ![Arduino](https://img.shields.io/badge/-Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white)
 
-## Notes
+## 📖 Notes
 start a virtual environment: run this in the terminal .\venv\Scripts\activate
 then start the server by running flask 
 
 columns of the csv: n, m, x, ab_pose_x where a is seconds, b is frame, pose is either hand or pose, x is the coordinate, either x, y or z
+
+### Thank You.
